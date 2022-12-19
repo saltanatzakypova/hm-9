@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import AddUser from "./components/Users/AddUser";
+import UsersList from "./components/Users/UsersList";
+import UseLocalStorage from "./hooks/use-localstorage/UseLocalStorage";
+// import Wrapper from "./components/Helpers/Wrapper";
 
 function App() {
+  // const [userList, setUserList] = useState([]);
+  const [userList, setUserList] = UseLocalStorage("todos", [
+    { name: "nurtilek", age: 19, id: Math.random().toString(), delete: false },
+  ]);
+  const [empty, setEmpty] = useState(false);
+
+  const addUserHandler = (uName, uAge) => {
+    setUserList((prevUserList) => {
+      return [
+        ...prevUserList,
+        { name: uName, age: uAge, id: Math.random().toString(), delete: false },
+      ];
+    });
+    setEmpty(true);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <AddUser onAddUser={addUserHandler} key="add-user" />
+      <UsersList
+        users={userList}
+        setUsers={setUserList}
+        key="use-list"
+        userList={empty}
+      />
     </div>
   );
 }
